@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         //setContentView(R.layout.activity_main)
 
+
         binding.btnShow.setOnClickListener {
             Log.d(TAG_UI, "Show button pressed")
 
