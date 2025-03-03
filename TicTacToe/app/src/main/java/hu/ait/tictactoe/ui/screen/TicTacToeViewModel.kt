@@ -15,7 +15,7 @@ data class BoardCell(val row: Int, val col: Int)
 
 class TicTacToeViewModel : ViewModel() {
 
-    var board by mutableStateOf(Array(3) {Array(3) {null as Player?} })
+    var board by mutableStateOf(Array(3) { Array(3) { null as Player? } })
 
     var currentPlayer by mutableStateOf(Player.X)
 
@@ -24,6 +24,8 @@ class TicTacToeViewModel : ViewModel() {
             val newBoard = board.copyOf()
             newBoard[cell.row][cell.col] = currentPlayer
             board = newBoard
+
+            //board[cell.row][cell.col] = currentPlayer
 
             currentPlayer = if (currentPlayer == Player.X) Player.O else Player.X
         }
