@@ -11,8 +11,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import hu.ait.highlowgame.ui.navigation.GameScreen
+import hu.ait.highlowgame.ui.navigation.MainMenuScreen
 import hu.ait.highlowgame.ui.screen.GameScreen
+import hu.ait.highlowgame.ui.screen.MainMenuScreen
 import hu.ait.highlowgame.ui.theme.HighLowGameTheme
+import kotlinx.coroutines.MainScope
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,11 +29,35 @@ class MainActivity : ComponentActivity() {
         setContent {
             HighLowGameTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    GameScreen(
+                    MainNavigation(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun MainNavigation(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+) {
+    NavHost(
+        modifier = modifier,
+        navController = navController,
+        startDestination = MainMenuScreen
+    )
+    {
+        composable<MainMenuScreen> {
+            MainMenuScreen(
+                onStartClick = {
+                    navController.navigate(GameScreen(100))
+                }
+            )
+        }
+        composable<GameScreen> {
+            GameScreen()
         }
     }
 }
