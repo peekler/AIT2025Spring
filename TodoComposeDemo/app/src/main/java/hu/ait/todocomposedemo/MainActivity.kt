@@ -1,11 +1,9 @@
-package hu.ait.highlowgame
+package hu.ait.todocomposedemo
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -17,19 +15,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import hu.ait.highlowgame.ui.navigation.GameScreen
-import hu.ait.highlowgame.ui.navigation.MainMenuScreen
-import hu.ait.highlowgame.ui.screen.GameScreen
-import hu.ait.highlowgame.ui.screen.MainMenuScreen
-import hu.ait.highlowgame.ui.theme.HighLowGameTheme
-import kotlinx.coroutines.MainScope
+import hu.ait.todocomposedemo.ui.navigation.TodoScreenRoute
+import hu.ait.todocomposedemo.ui.screen.TodoScreen
+import hu.ait.todocomposedemo.ui.theme.TodoComposeDemoTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            HighLowGameTheme {
+            TodoComposeDemoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MainNavigation(
                         modifier = Modifier.padding(innerPadding)
@@ -40,50 +35,20 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-var globalNum = 5
-
-@Composable
-fun DemoScreen() {
-    Column {
-        ComponentHeader()
-        ComponentFooter()
-    }
-}
-
-@Composable
-fun ComponentHeader() {
-    Text("Demo Title")
-}
-
-@Composable
-fun ComponentFooter() {
-    Row {
-        Text("Demo Footer")
-        Text("2025")
-    }
-}
-
-
 @Composable
 fun MainNavigation(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
-) {
+    navController: NavHostController = rememberNavController()
+)
+{
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = MainMenuScreen
+        startDestination = TodoScreenRoute
     )
     {
-        composable<MainMenuScreen> {
-            MainMenuScreen(
-                onStartClick = {
-                    navController.navigate(GameScreen(100))
-                }
-            )
-        }
-        composable<GameScreen> {
-            GameScreen()
+        composable<TodoScreenRoute> {
+            TodoScreen()
         }
     }
 }
