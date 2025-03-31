@@ -61,11 +61,16 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoScreen(
-    viewModel: TodoViewModel = viewModel()
+    viewModel: TodoViewModel = viewModel(),
+    onInfoClicked : (Int, Int) -> Unit
 ) {
     var todoTitle by rememberSaveable { mutableStateOf("") }
 
     var showTodoDialg by rememberSaveable { mutableStateOf(false) }
+
+    var todoToEdit: TodoItem? by rememberSaveable {
+        mutableStateOf(null)
+    }
 
     Scaffold(
         topBar = {
@@ -99,7 +104,12 @@ fun TodoScreen(
                         )
                     }
                     IconButton(
-                        onClick = {}
+                        onClick = {
+                            onInfoClicked(
+                                viewModel.getAllTodoNum(),
+                                viewModel.getImportantTodoNum()
+                            )
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Info,
@@ -116,7 +126,7 @@ fun TodoScreen(
             if (showTodoDialg) {
                 TodoDialog(
                     viewModel = viewModel,
-                    todoToEdit = null,
+                    todoToEdit = todoToEdit,
                     onCancel = {
                         showTodoDialg = false
                     }
@@ -139,7 +149,11 @@ fun TodoScreen(
                             onDelete = {
                                 viewModel.removeTodoItem(todoItem)
                             },
-                            onEdit = {}
+                            onEdit = {
+                                todoItemToEdit ->
+                                    todoToEdit = todoItemToEdit
+                                    showTodoDialg = true
+                            }
                         )
                     }
                 }
@@ -309,16 +323,27 @@ fun TodoDialog(
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = {
-                        viewModel.addTodoList(
-                            TodoItem(
-                                id = "",
+                        if (todoToEdit == null) {
+                            viewModel.addTodoList(
+                                TodoItem(
+                                    id = "",
+                                    title = todoTitle,
+                                    description = todoDesc,
+                                    createDate = Date(System.currentTimeMillis()).toString(),
+                                    priority = if (important) TodoPriority.HIGH else TodoPriority.NORMAL,
+                                    isDone = false
+                                )
+                            )
+                        } else {
+                            val editedTodo = todoToEdit.copy(
                                 title = todoTitle,
                                 description = todoDesc,
-                                createDate = Date(System.currentTimeMillis()).toString(),
-                                priority = if (important) TodoPriority.HIGH else TodoPriority.NORMAL,
-                                isDone = false
+                                priority = if (important) TodoPriority.HIGH else TodoPriority.NORMAL
                             )
-                        )
+                            viewModel.editTodoItem(
+                                todoToEdit,
+                                editedTodo)
+                        }
 
 
                         onCancel()

@@ -15,7 +15,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import hu.ait.todocomposedemo.ui.navigation.SummaryScreenRoute
 import hu.ait.todocomposedemo.ui.navigation.TodoScreenRoute
+import hu.ait.todocomposedemo.ui.screen.SummaryScreen
 import hu.ait.todocomposedemo.ui.screen.TodoScreen
 import hu.ait.todocomposedemo.ui.theme.TodoComposeDemoTheme
 
@@ -48,7 +50,17 @@ fun MainNavigation(
     )
     {
         composable<TodoScreenRoute> {
-            TodoScreen()
+            TodoScreen(
+                onInfoClicked = {
+                    allTodo, importantTodo ->
+                    navController.navigate(SummaryScreenRoute(
+                        allTodo,importantTodo
+                    ))
+                }
+            )
+        }
+        composable<SummaryScreenRoute> {
+            SummaryScreen()
         }
     }
 }
