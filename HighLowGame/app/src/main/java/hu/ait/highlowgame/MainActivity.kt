@@ -40,30 +40,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-var globalNum = 5
-
-@Composable
-fun DemoScreen() {
-    Column {
-        ComponentHeader()
-        ComponentFooter()
-    }
-}
-
-@Composable
-fun ComponentHeader() {
-    Text("Demo Title")
-}
-
-@Composable
-fun ComponentFooter() {
-    Row {
-        Text("Demo Footer")
-        Text("2025")
-    }
-}
-
-
 @Composable
 fun MainNavigation(
     modifier: Modifier = Modifier,

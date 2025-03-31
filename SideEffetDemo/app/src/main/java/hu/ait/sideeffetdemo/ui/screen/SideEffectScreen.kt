@@ -29,7 +29,7 @@ fun SideEffectScreen() {
     }
 
     DisposableEffect(key1 = Unit) {
-        //Log.d("TAG_SIDE", "LAUNCH in DisposeEffect CALLED")
+        Log.d("TAG_SIDE", "LAUNCH in DisposeEffect CALLED")
 
         onDispose {
             Log.d("TAG_SIDE", "DisposableEffect CALLED")
