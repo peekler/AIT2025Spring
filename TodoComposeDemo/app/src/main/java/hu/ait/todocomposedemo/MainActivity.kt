@@ -15,12 +15,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import hu.ait.todocomposedemo.ui.navigation.SummaryScreenRoute
 import hu.ait.todocomposedemo.ui.navigation.TodoScreenRoute
 import hu.ait.todocomposedemo.ui.screen.SummaryScreen
 import hu.ait.todocomposedemo.ui.screen.TodoScreen
 import hu.ait.todocomposedemo.ui.theme.TodoComposeDemoTheme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

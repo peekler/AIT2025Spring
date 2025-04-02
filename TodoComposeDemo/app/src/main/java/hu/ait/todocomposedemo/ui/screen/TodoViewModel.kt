@@ -2,10 +2,18 @@ package hu.ait.todocomposedemo.ui.screen
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.ait.todocomposedemo.data.TodoDAO
 import hu.ait.todocomposedemo.data.TodoItem
 import hu.ait.todocomposedemo.data.TodoPriority
+import javax.inject.Inject
 
-class TodoViewModel : ViewModel() {
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+@HiltViewModel
+class TodoViewModel @Inject constructor(val todoDAO: TodoDAO) : ViewModel() {
 
     private var _todoList = mutableStateListOf<TodoItem>()
 
@@ -14,7 +22,7 @@ class TodoViewModel : ViewModel() {
         {
             _todoList.add(
                 TodoItem(
-                    "",
+                    0,
                     "Todo $it", "Description $it",
                     "17.03.2025.", TodoPriority.NORMAL, false
                 )
@@ -36,6 +44,10 @@ class TodoViewModel : ViewModel() {
 
     fun addTodoList(todoItem: TodoItem) {
         _todoList.add(todoItem)
+
+        viewModelScope.launch() {
+            todoDAO.insert(todoItem)
+        }
     }
 
     fun removeTodoItem(todoItem: TodoItem) {

@@ -55,13 +55,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import hu.ait.todocomposedemo.data.TodoPriority
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoScreen(
-    viewModel: TodoViewModel = viewModel(),
+    viewModel: TodoViewModel = hiltViewModel(),
     onInfoClicked : (Int, Int) -> Unit
 ) {
     var todoTitle by rememberSaveable { mutableStateOf("") }
@@ -326,7 +327,7 @@ fun TodoDialog(
                         if (todoToEdit == null) {
                             viewModel.addTodoList(
                                 TodoItem(
-                                    id = "",
+                                    id = 0,
                                     title = todoTitle,
                                     description = todoDesc,
                                     createDate = Date(System.currentTimeMillis()).toString(),
