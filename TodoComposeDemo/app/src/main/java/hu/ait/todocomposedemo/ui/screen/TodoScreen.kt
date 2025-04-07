@@ -40,9 +40,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -57,14 +59,19 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.ait.todocomposedemo.data.TodoPriority
+import kotlinx.coroutines.launch
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoScreen(
     viewModel: TodoViewModel = hiltViewModel(),
-    onInfoClicked : (Int, Int) -> Unit
+    onInfoClicked: (Int, Int) -> Unit
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
+    val todoList by viewModel.getAllToDoList().collectAsState(emptyList())
+
     var todoTitle by rememberSaveable { mutableStateOf("") }
 
     var showTodoDialg by rememberSaveable { mutableStateOf(false) }
@@ -106,10 +113,14 @@ fun TodoScreen(
                     }
                     IconButton(
                         onClick = {
-                            onInfoClicked(
-                                viewModel.getAllTodoNum(),
-                                viewModel.getImportantTodoNum()
-                            )
+                            coroutineScope.launch {
+                                val allTodo = viewModel.getAllTodoNum()
+                                val importantTodo = viewModel.getImportantTodoNum()
+
+                                onInfoClicked(
+                                    allTodo, importantTodo
+                                )
+                            }
                         }
                     ) {
                         Icon(
@@ -135,11 +146,11 @@ fun TodoScreen(
             }
 
 
-            if (viewModel.getAllToDoList().size == 0) {
+            if (todoList.isEmpty()) {
                 Text("No todos")
             } else {
                 LazyColumn {
-                    items(viewModel.getAllToDoList()) { todoItem ->
+                    items(todoList) { todoItem ->
                         //Text(text = "${todoItem.title} - ${todoItem.createDate}")
 
                         TodoCard(
@@ -150,10 +161,9 @@ fun TodoScreen(
                             onDelete = {
                                 viewModel.removeTodoItem(todoItem)
                             },
-                            onEdit = {
-                                todoItemToEdit ->
-                                    todoToEdit = todoItemToEdit
-                                    showTodoDialg = true
+                            onEdit = { todoItemToEdit ->
+                                todoToEdit = todoItemToEdit
+                                showTodoDialg = true
                             }
                         )
                     }
@@ -185,7 +195,8 @@ fun TodoCard(
         modifier = Modifier.padding(5.dp)
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier
+                .padding(20.dp)
                 .animateContentSize()
         ) {
             Row(
@@ -341,9 +352,7 @@ fun TodoDialog(
                                 description = todoDesc,
                                 priority = if (important) TodoPriority.HIGH else TodoPriority.NORMAL
                             )
-                            viewModel.editTodoItem(
-                                todoToEdit,
-                                editedTodo)
+                            viewModel.editTodoItem(editedTodo)
                         }
 
 

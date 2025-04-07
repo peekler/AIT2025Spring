@@ -16,9 +16,11 @@ interface TodoDAO {
     @Query("SELECT * from todotable WHERE id = :id")
     fun getTodo(id: Int): Flow<TodoItem>
 
+    // counts how many row we have in the table
     @Query("SELECT COUNT(*) from todotable")
     suspend fun getTodosNum(): Int
 
+    // counts how many HIGH prio todoItem we have in the table
     @Query("""SELECT COUNT(*) from todotable WHERE priority="HIGH"""")
     suspend fun getImportantTodosNum(): Int
 

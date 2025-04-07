@@ -10,70 +10,56 @@ import javax.inject.Inject
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class TodoViewModel @Inject constructor(val todoDAO: TodoDAO) : ViewModel() {
 
-    private var _todoList = mutableStateListOf<TodoItem>()
-
-    init {
-        repeat(0)
-        {
-            _todoList.add(
-                TodoItem(
-                    0,
-                    "Todo $it", "Description $it",
-                    "17.03.2025.", TodoPriority.NORMAL, false
-                )
-            )
-        }
+    fun getAllToDoList(): Flow<List<TodoItem>> {
+        return todoDAO.getAllTodos()
     }
 
-    fun getAllToDoList(): List<TodoItem> {
-        return _todoList
+    suspend fun getAllTodoNum(): Int {
+        return todoDAO.getTodosNum()
     }
 
-    fun getAllTodoNum(): Int {
-        return _todoList.size
-    }
-
-    fun getImportantTodoNum(): Int {
-        return _todoList.count{it.priority==TodoPriority.HIGH}
+    suspend fun getImportantTodoNum(): Int {
+        return todoDAO.getImportantTodosNum()
     }
 
     fun addTodoList(todoItem: TodoItem) {
-        _todoList.add(todoItem)
-
+        // launch: launch a new coroutine in the scope of the current ViewModel
         viewModelScope.launch() {
             todoDAO.insert(todoItem)
         }
     }
 
     fun removeTodoItem(todoItem: TodoItem) {
-        _todoList.remove(todoItem)
+        viewModelScope.launch {
+            todoDAO.delete(todoItem)
+        }
     }
 
-    fun editTodoItem(originalTodo: TodoItem, editedTodo: TodoItem) {
-        val index = _todoList.indexOf(originalTodo)
-        _todoList[index] = editedTodo
+    fun editTodoItem(editedTodo: TodoItem) {
+        viewModelScope.launch {
+            todoDAO.update(editedTodo)
+        }
     }
 
     fun changeTodoState(todoItem: TodoItem, value: Boolean) {
-        val index = _todoList.indexOf(todoItem)
-
-        val newTodo = todoItem.copy(
-            title = todoItem.title,
-            description = todoItem.description,
-            createDate = todoItem.createDate,
-            priority = todoItem.priority,
-            isDone = value
-        )
-
-        _todoList[index] = newTodo
+        // because copy makes a new instance,
+        // this will trigger the state change in the table
+        val updatedTodo = todoItem.copy()
+        updatedTodo.isDone = value
+        viewModelScope.launch {
+            todoDAO.update(updatedTodo)
+        }
     }
 
     fun clearAllTodos() {
-        _todoList.clear()
+        viewModelScope.launch {
+            todoDAO.deleteAllTodos()
+        }
     }
 }
