@@ -1,6 +1,7 @@
-package hu.ait.todocomposedemo
+package hu.ait.aitforum
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -15,54 +16,45 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import dagger.hilt.android.AndroidEntryPoint
-import hu.ait.todocomposedemo.ui.navigation.SummaryScreenRoute
-import hu.ait.todocomposedemo.ui.navigation.TodoScreenRoute
-import hu.ait.todocomposedemo.ui.screen.SummaryScreen
-import hu.ait.todocomposedemo.ui.screen.TodoScreen
-import hu.ait.todocomposedemo.ui.theme.TodoComposeDemoTheme
+import hu.ait.aitforum.navigation.LoginScreenRoutes
+import hu.ait.aitforum.navigation.MessagesScreenRoutes
+import hu.ait.aitforum.ui.screen.LoginScreen
+import hu.ait.aitforum.ui.screen.MessagesScreen
+import hu.ait.aitforum.ui.theme.AITForumTheme
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TodoComposeDemoTheme {
+            AITForumTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainNavigation(
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    MainNavigation(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
 }
 
+
 @Composable
 fun MainNavigation(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
-)
-{
+    navController: NavHostController = rememberNavController(),
+) {
     NavHost(
-        //modifier = modifier,
+        modifier = modifier,
         navController = navController,
-        startDestination = TodoScreenRoute
+        startDestination = LoginScreenRoutes
     )
     {
-        composable<TodoScreenRoute> {
-            TodoScreen(
-                onInfoClicked = {
-                    allTodo, importantTodo ->
-                    navController.navigate(SummaryScreenRoute(
-                        allTodo,importantTodo
-                    ))
-                }
-            )
+        composable<LoginScreenRoutes> {
+            LoginScreen()
         }
-        composable<SummaryScreenRoute> {
-            SummaryScreen()
+        composable<MessagesScreenRoutes> {
+            MessagesScreen()
         }
     }
 }
+
+

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "332858697100",
+    "project_id": "ait2025springpeter",
+    "storage_bucket": "ait2025springpeter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:332858697100:android:afdf5f357a879d746722a9",
+        "android_client_info": {
+          "package_name": "hu.ait.aitforum"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTWJCj4C2xr1BCYrHCWLP2uMbOnuWDfLk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
