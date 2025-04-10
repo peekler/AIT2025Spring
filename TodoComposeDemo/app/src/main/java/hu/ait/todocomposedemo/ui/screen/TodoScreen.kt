@@ -103,6 +103,7 @@ fun TodoScreen(
                     }
                     IconButton(
                         onClick = {
+                            todoToEdit = null
                             showTodoDialg = true
                         }
                     ) {
