@@ -18,8 +18,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import hu.ait.aitforum.navigation.LoginScreenRoutes
 import hu.ait.aitforum.navigation.MessagesScreenRoutes
+import hu.ait.aitforum.navigation.WriteMessageScreenRoutes
 import hu.ait.aitforum.ui.screen.LoginScreen
 import hu.ait.aitforum.ui.screen.MessagesScreen
+import hu.ait.aitforum.ui.screen.WriteMessageScreen
 import hu.ait.aitforum.ui.theme.AITForumTheme
 
 class MainActivity : ComponentActivity() {
@@ -49,10 +51,17 @@ fun MainNavigation(
     )
     {
         composable<LoginScreenRoutes> {
-            LoginScreen()
+            LoginScreen(onLoginSuccess = {navController.navigate(MessagesScreenRoutes)})
         }
         composable<MessagesScreenRoutes> {
-            MessagesScreen()
+            MessagesScreen(
+                onNewMessageClick = {
+                    navController.navigate(WriteMessageScreenRoutes)
+                }
+            )
+        }
+        composable<WriteMessageScreenRoutes> {
+            WriteMessageScreen()
         }
     }
 }

@@ -32,17 +32,24 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = viewModel(),
+    onLoginSuccess: () -> Unit = {},
     modifier: Modifier = Modifier) {
+
     var showPassword by rememberSaveable { mutableStateOf(false) }
     var email by rememberSaveable { mutableStateOf("demo@ait.hu") }
     var password by rememberSaveable { mutableStateOf("123456") }
+
+    val coroutineScope = rememberCoroutineScope()
+
 
     Box() {
         Text(
@@ -101,7 +108,13 @@ fun LoginScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 OutlinedButton(onClick = {
-                    viewModel.loginUser(email, password)
+                    coroutineScope.launch {
+                        val result = viewModel.loginUser(email, password)
+                        if (result?.user != null) {
+                            // navigate to messages screen
+                            onLoginSuccess()
+                        }
+                    }
                 }) {
                     Text(text = "Login")
                 }

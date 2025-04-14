@@ -7,3 +7,6 @@ object LoginScreenRoutes
 
 @Serializable
 object MessagesScreenRoutes
+
+@Serializable
+object WriteMessageScreenRoutes
