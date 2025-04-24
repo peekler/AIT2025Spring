@@ -21,6 +21,7 @@ import hu.ait.httpdemo.navigation.MoneyScreenRoute
 import hu.ait.httpdemo.navigation.NasaScreenRoute
 import hu.ait.httpdemo.ui.screen.MainScreen
 import hu.ait.httpdemo.ui.screen.money.MoneyScreen
+import hu.ait.httpdemo.ui.screen.nasa.NasaMarsScreen
 import hu.ait.httpdemo.ui.theme.HttpDemoTheme
 
 @AndroidEntryPoint
@@ -65,7 +66,7 @@ fun MainNavigation(
             MoneyScreen()
         }
         composable<NasaScreenRoute> {
-            //
+            NasaMarsScreen()
         }
     }
 }
