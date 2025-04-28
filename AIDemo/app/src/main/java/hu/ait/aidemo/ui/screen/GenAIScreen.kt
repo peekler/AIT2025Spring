@@ -1,12 +1,17 @@
 package hu.ait.aidemo.ui.screen
 
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -19,11 +24,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import hu.ait.aidemo.ComposeFileProvider
+import coil.compose.AsyncImage
 
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -42,9 +50,17 @@ fun GenAIScreen(
         )
     )
 
+    var hasImage by remember {
+        mutableStateOf(false)
+    }
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val context = LocalContext.current
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
+            hasImage = success
         }
     )
 
@@ -56,7 +72,9 @@ fun GenAIScreen(
         if (permissionsState.allPermissionsGranted) {
             Text("ALL PERMISSIONS GRANTED")
             Button(onClick = {
-                //cameraLauncher.launch()
+                val uri = ComposeFileProvider.getImageUri(context)
+                imageUri = uri
+                cameraLauncher.launch(uri)
             }) {
                 Text("Launch camera")
             }
@@ -75,6 +93,13 @@ fun GenAIScreen(
             }
         }
 
+        if (hasImage && imageUri != null) {
+            AsyncImage(
+                model = imageUri,
+                modifier = Modifier.size(200.dp, 200.dp),
+                contentDescription = "Selected image"
+            )
+        }
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -83,13 +108,34 @@ fun GenAIScreen(
                 textPrompt = it
             }
         )
+
         Button(onClick = {
             viewModel.generateStory(textPrompt)
         }) {
             Text(text = "Generate")
         }
 
+        Button(onClick = {
+            viewModel.generateContentWithPromptAndImage(
+                textPrompt,
+                getBitmapFromUri(context, imageUri!!)!!
+            )
+        }) {
+            Text(text = "Generate with Image")
+        }
+
         Text(text = textResult ?: "No content generated yet",
             fontSize = 30.sp)
+    }
+}
+
+fun getBitmapFromUri(context: Context, uri: Uri): Bitmap? {
+    return try {
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            BitmapFactory.decodeStream(inputStream)
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
     }
 }

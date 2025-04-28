@@ -1,5 +1,6 @@
 package hu.ait.aidemo.ui.screen
 
+import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.ai.client.generativeai.BuildConfig
@@ -12,13 +13,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import com.google.ai.client.generativeai.type.content
 
 
-class GenAIViewModel: ViewModel() {
+class GenAIViewModel : ViewModel() {
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-2.0-flash",
-        apiKey = "YOUR_KEY_HERE",
+        apiKey = "AIzaSyDq6ppwq4Kk8HlNuV2QDcOfK3sKxsGJpLA",
         generationConfig = generationConfig {
             temperature = 0.7f
             topP = 0.9f
@@ -44,7 +46,8 @@ class GenAIViewModel: ViewModel() {
                         "$userPrompt"
 
                 val result = generativeModel.generateContent(
-                    finalPrompt)
+                    finalPrompt
+                )
 
                 _textGenerationResult.value = result.text
             } catch (e: Exception) {
@@ -52,4 +55,29 @@ class GenAIViewModel: ViewModel() {
             }
         }
     }
+
+
+    fun generateContentWithPromptAndImage(
+        userPrompt: String = "Tell me a joke",
+        bitmap: Bitmap
+    ) {
+        _textGenerationResult.value = "Generating..."
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val result = generativeModel.generateContent(
+                    content {
+                        image(bitmap)
+                        text(userPrompt)
+                    }
+                )
+
+
+                _textGenerationResult.value = result.text
+            } catch (e: Exception) {
+                _textGenerationResult.value = "Error: ${e.message}"
+            }
+        }
+    }
+
+
 }
