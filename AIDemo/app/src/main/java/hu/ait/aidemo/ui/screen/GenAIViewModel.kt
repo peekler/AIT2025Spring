@@ -21,15 +21,7 @@ class GenAIViewModel : ViewModel() {
     private val generativeModel = GenerativeModel(
         modelName = "gemini-2.0-flash",
         apiKey = "AIzaSyDq6ppwq4Kk8HlNuV2QDcOfK3sKxsGJpLA",
-        generationConfig = generationConfig {
-            temperature = 0.7f
-            topP = 0.9f
-            topK = 32
-            maxOutputTokens = 4096
-        },
-        safetySettings = listOf(
-            SafetySetting(HarmCategory.DANGEROUS_CONTENT, BlockThreshold.MEDIUM_AND_ABOVE)
-        )
+
     )
 
     private val _textGenerationResult = MutableStateFlow<String?>(null)

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "993073210950",
+    "project_id": "myplaces-559ac",
+    "storage_bucket": "myplaces-559ac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993073210950:android:acb073cd05d837c6b68c47",
+        "android_client_info": {
+          "package_name": "hu.bme.aut.myplacescomposefirebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmp-cvE7VbK9P8s8FJ-3mZIzMf4m7kNPs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
