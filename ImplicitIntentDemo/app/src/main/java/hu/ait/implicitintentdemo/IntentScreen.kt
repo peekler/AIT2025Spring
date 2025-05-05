@@ -18,9 +18,9 @@ fun IntentScreen() {
         Button(onClick = {
             //intentSearch(context)
             //intentCall(context)
-            intentSend(context)
+            //intentSend(context)
             //intentWaze(context)
-            //intentStreetMaps(context)
+            intentStreetMaps(context)
         }) {
             Text(text = "Intent start")
         }
@@ -43,7 +43,7 @@ private fun intentCall(context: Context) {
 private fun intentSend(context: Context) {
     val intentSend = Intent(Intent.ACTION_SEND)
     intentSend.type = "text/plain"
-    intentSend.`package` = "com.facebook.katana"
+    //intentSend.`package` = "com.facebook.katana"
     intentSend.putExtra(Intent.EXTRA_TEXT, "Share demo")
     context.startActivity(intentSend)
     //startActivity(Intent.createChooser(intentSend, "Select share app"));
