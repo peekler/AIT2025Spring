@@ -5,6 +5,7 @@ import android.webkit.ConsoleMessage
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Button
@@ -28,10 +29,23 @@ fun WebViewScreen2() {
 
     val state = rememberWebViewState(url = "https://www.ait-budapest.com/")
 
-    var url by remember{
-        mutableStateOf("https://www.ait-budapest.com/") }
-    var myUrl by remember{
-        mutableStateOf("https://www.ait-budapest.com/") }
+    var url by remember {
+        mutableStateOf("https://www.ait-budapest.com/")
+    }
+    var myUrl by remember {
+        mutableStateOf("https://www.ait-budapest.com/")
+    }
+
+    var backHandlerEnabled by remember {
+        mutableStateOf(false)
+    }
+    var webBackPressed by remember {
+        mutableStateOf(false)
+    }
+
+    BackHandler(enabled = backHandlerEnabled) {
+        webBackPressed = true
+    }
 
     Column {
         Row {
@@ -59,27 +73,35 @@ fun WebViewScreen2() {
             }
         }, update = {
             it.loadUrl(myUrl)
+            if (webBackPressed) {
+                if (it.canGoBack()) {
+                    it.goBack()
+                }
+                webBackPressed=false
+                backHandlerEnabled = !it.canGoBack()
+            }
         })
     }
 }
 
 
-class CustomWebViewClient: WebViewClient(){
+class CustomWebViewClient : WebViewClient() {
     override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-        if(url != null && url.startsWith("https://google.com")){
+        if (url != null && url.startsWith("https://google.com")) {
             return true
         }
         return false
     }
+
 
 }
 
 class CustomWebChromeClient : WebChromeClient() {
     override fun onCloseWindow(window: WebView?) {}
 
-
-
     override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
         return true
     }
+
+
 }

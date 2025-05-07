@@ -227,6 +227,7 @@ fun MapsScreen(
 
 
 fun getLocationText(location: Location?): String {
+
     return """
        Lat: ${location?.latitude}
        Lng: ${location?.longitude}

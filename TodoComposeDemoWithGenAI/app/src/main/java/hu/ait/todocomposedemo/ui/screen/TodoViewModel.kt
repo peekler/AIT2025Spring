@@ -10,6 +10,7 @@ import javax.inject.Inject
 
 import androidx.lifecycle.viewModelScope
 import com.google.ai.client.generativeai.GenerativeModel
+import hu.ait.todocomposedemo.data.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -74,7 +75,8 @@ class TodoViewModel @Inject constructor(val todoDAO: TodoDAO) : ViewModel() {
     fun addTodoList(todoItem: TodoItem) {
         // launch: launch a new coroutine in the scope of the current ViewModel
         viewModelScope.launch() {
-            todoDAO.insert(todoItem)
+
+            //todoDAO.insert(todoItem)
         }
     }
 
