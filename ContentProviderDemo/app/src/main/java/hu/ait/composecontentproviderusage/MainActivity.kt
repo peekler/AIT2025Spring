@@ -103,7 +103,6 @@ private fun getContacts(context: Context) {
         ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME
                 + " DESC"
     )
-
     Toast.makeText(
         context, "" + cursorContacts!!.count,
         Toast.LENGTH_LONG

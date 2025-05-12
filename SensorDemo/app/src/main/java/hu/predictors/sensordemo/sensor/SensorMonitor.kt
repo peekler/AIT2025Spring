@@ -20,8 +20,8 @@ class SensorMonitor @Inject constructor(
     init {
         sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         //acceleroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        acceleroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
-        //acceleroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
+        //acceleroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+        acceleroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
     }
 
     fun startSensorMonitoring() : Flow<SensorEvent> = callbackFlow{
